@@ -2,14 +2,28 @@ const fs = require("fs");
 const http = require("http");
 const url = require("url");
 
-// Server
+/////////////////////////
+// ##### Server ##### //
+///////////////////////
+
+// read the file and get the data from it
+const data = fs.readFileSync(`${__dirname}/dev-data/data.json`, "utf-8");
+const dataObj = JSON.parse(data); // Converts the json data to js object
+
 const server = http.createServer((req, res) => {
   const pathName = req.url;
 
+  // /, /overview
   if (pathName === "/" || pathName === "/overview") {
     res.end("This is the OVERVIEW");
+    // /product
   } else if (pathName === "/product") {
     res.end("This is the PRODUCT");
+    // /api
+  } else if (pathName === "/api") {
+    res.writeHead(200, { "Content-type": "application/json" });
+    res.end(data);
+    // no page found error
   } else {
     res.writeHead(404, {
       "Content-type": "text/html",
@@ -18,7 +32,7 @@ const server = http.createServer((req, res) => {
     res.end("<h1>This path not found!</h1>");
   }
 
-  res.end("This is the responds from the server");
+  //   res.end("This is the responds from the server");
 });
 
 const PORT = process.env.PORT || 8000;
