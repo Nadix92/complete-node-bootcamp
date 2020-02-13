@@ -1,0 +1,2 @@
+Synchronous = each line is read line after line, so if one line 2 take 3sec then line 4 wont be read before the 3 sec is passed on line 3 aka Blocking Code
+Asynchronous = 
