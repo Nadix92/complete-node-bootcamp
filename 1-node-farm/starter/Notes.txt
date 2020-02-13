@@ -1,2 +1,7 @@
-Synchronous = each line is read line after line, so if one line 2 take 3sec then line 4 wont be read before the 3 sec is passed on line 3 aka Blocking Code
-Asynchronous = 
+Synchronous = BLOCKING Code - each line is read line after line, so if one line 2 take 3sec, then line 4 wont be read before the 3 sec is passed on line 3
+
+Asynchronous = NON-BLOCKING Code - If line 3 take 3 sec it will run in background while line 4 will be instantly read and don't block the next line.
+This also normally takes a callback function
+
+Callback = the function in a argument of a function is a callback in basic terms function(arg1, arg2, () => {console.log("callback functions is here")}) 
+
