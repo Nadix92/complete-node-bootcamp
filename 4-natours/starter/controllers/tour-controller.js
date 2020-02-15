@@ -3,12 +3,23 @@ const fs = require("fs");
 // read and store file in a const | Will prob be replaced with a DB later on
 const tours = JSON.parse(fs.readFileSync(`${__dirname}/../dev-data/data/tours-simple.json`));
 
+// Checks
 exports.checkID = (req, res, next, val) => {
   console.log(`Tour id is: ${val}`);
   if (+req.params.id > tours.length) {
     return res.status(404).json({
       status: "fail",
       message: "Invalid ID"
+    });
+  }
+  next();
+};
+
+exports.checkBody = (req, res, next) => {
+  if (!req.body.name || !req.body.price) {
+    return res.status(400).json({
+      status: "fail",
+      message: "Missing name or price"
     });
   }
   next();
