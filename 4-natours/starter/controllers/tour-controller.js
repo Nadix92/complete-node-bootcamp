@@ -4,7 +4,7 @@ const fs = require("fs");
 const tours = JSON.parse(fs.readFileSync(`${__dirname}/../dev-data/data/tours-simple.json`));
 
 // Tours Handlers
-const getAllTours = (req, res) => {
+exports.getAllTours = (req, res) => {
   res.status(200).json({
     status: "success",
     results: tours.length,
@@ -13,7 +13,7 @@ const getAllTours = (req, res) => {
     }
   });
 };
-const getTour = (req, res) => {
+exports.getTour = (req, res) => {
   const id = +req.params.id;
   const tour = tours.find(el => el.id === id); // check if the id we type is === to the id in our document
 
@@ -32,7 +32,7 @@ const getTour = (req, res) => {
     }
   });
 };
-const createTour = (req, res) => {
+exports.createTour = (req, res) => {
   // console.log(req.body);
   const newId = tours[tours.length - 1].id + 1;
   const newTour = Object.assign({ id: newId }, req.body);
@@ -48,7 +48,7 @@ const createTour = (req, res) => {
     });
   });
 };
-const updateTour = (req, res) => {
+exports.updateTour = (req, res) => {
   if (+req.params.id > tours.length) {
     return res.status(404).json({
       status: "fail",
@@ -63,7 +63,7 @@ const updateTour = (req, res) => {
     }
   });
 };
-const deleteTour = (req, res) => {
+exports.deleteTour = (req, res) => {
   if (+req.params.id > tours.length) {
     return res.status(404).json({
       status: "fail",

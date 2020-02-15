@@ -1,13 +1,13 @@
 {
   "name": "starter",
   "version": "1.0.0",
-  "description": "",
+  "description": "Learning node, express and mongoDB",
   "main": "app.js",
   "scripts": {
-    "test": "echo \"Error: no test specified\" && exit 1"
+    "start": "nodemon server.js"
   },
   "keywords": [],
-  "author": "",
+  "author": "Ole Kristian",
   "license": "ISC",
   "dependencies": {
     "express": "^4.17.1",

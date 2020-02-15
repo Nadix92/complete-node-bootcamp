@@ -16,6 +16,4 @@ app.use(express.json()); // we need this to be able to read json from a request
 app.use("/api/v1/tours", tourRouter);
 app.use("/api/v1/users", userRouter);
 
-// Listen on server
-const port = process.env.PORT || 3000;
-app.listen(port, () => console.log(`Server running on http://localhost:${port}`));
+module.exports = app;
