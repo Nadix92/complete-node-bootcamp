@@ -61,7 +61,7 @@ exports.createTour = async (req, res) => {
   }
 };
 
-// This is a patch request (updates only filed we specify)
+// This is a patch request (updates only variables we specify)
 exports.updateTour = async (req, res) => {
   try {
     const tour = await Tour.findByIdAndUpdate(req.params.id, req.body, {
