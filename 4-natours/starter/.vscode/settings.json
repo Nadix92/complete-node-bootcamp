@@ -2,5 +2,11 @@
     "cSpell.ignoreWords": [
         "kristian",
         "natours"
+    ],
+    "cSpell.words": [
+        "maxlength",
+        "minlength",
+        "slugify",
+        "virtuals"
     ]
 }
