@@ -1,5 +1,6 @@
 const mongoose = require("mongoose");
 const validator = require("validator");
+const bcrypt = require("bcryptjs");
 
 const userSchema = new mongoose.Schema({
   name: {
@@ -17,14 +18,39 @@ const userSchema = new mongoose.Schema({
   password: {
     type: String,
     required: [true, "Please provide a password"],
-    minlength: [8, "Password must have minimum 8 characters"]
+    minlength: [8, "Password must have minimum 8 characters"],
+    select: false
   },
   passwordConfirm: {
     type: String,
     required: [true, "Please confirm your password"],
-    minlength: [8, "Password must have minimum 8 characters"]
+    validate: {
+      validator: function(el) {
+        // This will only work on .save() and .create()
+        return el === this.password; // check userSchema.password === current element password aka passwordConfirm
+      },
+      message: "Does not match with your password"
+    }
   }
 });
+
+// Encryption
+userSchema.pre("save", async function(next) {
+  // Only run this function if password was actually modified
+  if (!this.isModified("password")) return next();
+
+  // hash (userSchema.password, 12 rounds)
+  this.password = await bcrypt.hash(this.password, 12);
+
+  // Delete password Confirm field
+  this.passwordConfirm = undefined;
+  next();
+});
+
+// this.password don't work because it is set to: select: false
+userSchema.methods.correctPassword = async function(candidatePassword, userPassword) {
+  return await bcrypt.compare(candidatePassword, userPassword);
+};
 
 const User = mongoose.model("User", userSchema);
 
