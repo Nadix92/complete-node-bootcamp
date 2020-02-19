@@ -1,5 +1,11 @@
-const dotenv = require("dotenv").config();
+const dotenv = require("dotenv").config(); // works only if ur name your file .env else u need to specify path
 const mongoose = require("mongoose");
+
+process.on("uncaughtException", err => {
+  console.log("UNCAUGHT EXCEPTION!! Shutting down...");
+  console.log(err.name, err.message);
+  process.exit(1);
+});
 
 const app = require("./app");
 
@@ -16,6 +22,15 @@ mongoose
 
 // Listen on server
 const port = process.env.PORT || 4000;
-app.listen(port, () =>
+const server = app.listen(port, () =>
   console.log(`Server running on http://localhost:${port}`)
 );
+
+// check for all unhandled Promise
+process.on("unhandledRejection", err => {
+  console.log("UNHANDLED REJECTION!! Shutting down...");
+  console.log(err.name, err.message);
+  server.close(() => {
+    process.exit(1);
+  });
+});

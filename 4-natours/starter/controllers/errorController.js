@@ -1,3 +1,4 @@
+// This file is run in app.js as the last middleware
 const AppError = require("./../utils/appError");
 
 const handleCastErrorDB = err => {
