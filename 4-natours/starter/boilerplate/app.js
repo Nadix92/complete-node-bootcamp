@@ -3,8 +3,8 @@ const express = require("express");
 const morgan = require("morgan");
 
 // Local modules
+const userRouter = require("./routes/userRoutes");
 // const tourRouter = require("./routes/tourRoutes");
-// const userRouter = require("./routes/userRoutes");
 
 const app = express();
 
@@ -17,7 +17,7 @@ app.use(express.json()); // we need this to be able to read json from a request
 app.use(express.static(`${__dirname}/public`)); // gives express access to the public folder
 
 // Routes
+app.use("/api/v1/users", userRouter);
 // app.use("/api/v1/tours", tourRouter);
-// app.use("/api/v1/users", userRouter);
 
 // module.exports = app;
