@@ -28,10 +28,9 @@ exports.getAllTours = catchAsync(async (req, res, next) => {
 // .get() by ID
 exports.getTour = catchAsync(async (req, res, next) => {
   const tour = await Tour.findById(req.params.id);
+  // Tour.findOne({ _id: req.params.id })
 
   if (!tour) {
-    console.log("### App Error got triggered ###");
-
     return next(new AppError("No tour found with that ID", 404));
   }
 
