@@ -35,7 +35,7 @@ const userSchema = new mongoose.Schema({
         // This will only work on .save() and .create()
         return el === this.password; // check userSchema.password === current element password aka passwordConfirm
       },
-      message: "Does not match with your password"
+      message: "Passwords are not the same!"
     }
   },
   passwordChangedAt: Date,
@@ -53,6 +53,13 @@ userSchema.pre("save", async function(next) {
 
   // Delete password Confirm field
   this.passwordConfirm = undefined;
+  next();
+});
+
+userSchema.pre("save", function(next) {
+  if (!this.isModified("password") || this.isNew) return next();
+
+  this.passwordChangedAt = Date.now() - 1000;
   next();
 });
 
