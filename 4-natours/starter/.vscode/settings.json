@@ -6,6 +6,7 @@
     "cSpell.words": [
         "maxlength",
         "minlength",
+        "promisify",
         "slugify",
         "virtuals"
     ]
