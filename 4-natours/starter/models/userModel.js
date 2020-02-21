@@ -63,6 +63,7 @@ userSchema.pre("save", async function(next) {
 
 // This trigger on all query that starts with "find" findAndUpdate ect and so on
 userSchema.pre(/^find/, function(next) {
+  // Only shows res that don't have { active: false }
   this.find({ active: { $ne: false } });
   next();
 });
