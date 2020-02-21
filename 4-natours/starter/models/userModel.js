@@ -40,7 +40,12 @@ const userSchema = new mongoose.Schema({
   },
   passwordChangedAt: Date,
   passwordResetToken: String,
-  passwordResetExpires: Date
+  passwordResetExpires: Date,
+  active: {
+    type: Boolean,
+    default: true,
+    select: false
+  }
 });
 
 // Encryption
@@ -53,6 +58,12 @@ userSchema.pre("save", async function(next) {
 
   // Delete password Confirm field
   this.passwordConfirm = undefined;
+  next();
+});
+
+// This trigger on all query that starts with "find" findAndUpdate ect and so on
+userSchema.pre(/^find/, function(next) {
+  this.find({ active: { $ne: false } });
   next();
 });
 
