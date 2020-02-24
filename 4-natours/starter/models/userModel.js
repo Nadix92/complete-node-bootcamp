@@ -61,17 +61,17 @@ userSchema.pre("save", async function(next) {
   next();
 });
 
-// This trigger on all query that starts with "find" findAndUpdate ect and so on
-userSchema.pre(/^find/, function(next) {
-  // Only shows res that don't have { active: false }
-  this.find({ active: { $ne: false } });
-  next();
-});
-
 userSchema.pre("save", function(next) {
   if (!this.isModified("password") || this.isNew) return next();
 
   this.passwordChangedAt = Date.now() - 1000;
+  next();
+});
+
+// This trigger on all query that starts with "find" findAndUpdate ect and so on
+userSchema.pre(/^find/, function(next) {
+  // Only shows res that don't have { active: false }
+  this.find({ active: { $ne: false } });
   next();
 });
 
