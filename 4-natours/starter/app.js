@@ -1,4 +1,5 @@
 // Third party modules
+const path = require("path");
 const express = require("express");
 const morgan = require("morgan");
 const rateLimit = require("express-rate-limit");
@@ -16,7 +17,12 @@ const reviewRouter = require("./routes/reviewRoutes");
 
 const app = express();
 
+app.set("view engine", "pug"); // set pug as view engine
+app.set("views", path.join(__dirname, "views"));
+
 // Third party MiddleWares
+
+app.use(express.static(path.join(__dirname, "public")));
 
 // Set Security HTTP Headers
 app.use(helmet());
@@ -50,10 +56,14 @@ app.use(
   })
 );
 
-// gives express access to the public folder
-app.use(express.static(`${__dirname}/public`));
-
 // Routes
+app.get("/", (req, res) => {
+  res.status(200).render("base", {
+    tour: "The forest Hiker",
+    user: "Ole"
+  });
+});
+
 app.use("/api/v1/tours", tourRouter);
 app.use("/api/v1/users", userRouter);
 app.use("/api/v1/reviews", reviewRouter);
