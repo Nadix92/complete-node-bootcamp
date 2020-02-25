@@ -113,7 +113,7 @@ exports.getToursWithin = catchAsync(async (req, res, next) => {
   } else if (unit === "km") {
     radius = distance / 6378.1;
   } else {
-    next(new AppError("Please specify radius in mi or km"));
+    next(new AppError("Please specify unit in mi or km"));
   }
 
   if (!lat || !lng) {
@@ -139,4 +139,48 @@ exports.getToursWithin = catchAsync(async (req, res, next) => {
   });
 });
 
-// "/tours-within/:distance/center/:latlng/unit/:unit"
+exports.getDistances = catchAsync(async (req, res, next) => {
+  const { latlng, unit } = req.params;
+  const [lat, lng] = latlng.split(",");
+
+  let multiplier;
+
+  if (unit === "mi") {
+    multiplier = 0.000621371;
+  } else if (unit === "km") {
+    multiplier = 0.001;
+  } else {
+    next(new AppError("Please specify unit in mi or km"));
+  }
+
+  if (!lat || !lng) {
+    next(new AppError("Please provide latitude and longitude in the format lat,lng.", 400));
+  }
+
+  const distance = await Tour.aggregate([
+    {
+      // geoNear Always need to be first
+      $geoNear: {
+        near: {
+          type: "Point",
+          coordinates: [lng * 1, lat * 1]
+        },
+        distanceField: "distance",
+        distanceMultiplier: multiplier
+      }
+    },
+    {
+      $project: {
+        distance: 1,
+        name: 1
+      }
+    }
+  ]);
+
+  res.status(200).json({
+    status: "success",
+    data: {
+      data: distance
+    }
+  });
+});
