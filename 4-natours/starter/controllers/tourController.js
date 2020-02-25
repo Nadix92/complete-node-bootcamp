@@ -1,7 +1,7 @@
 const Tour = require("./../models/tourModel");
 const catchAsync = require("./../utils/catchAsync");
 const factory = require("./handlerFactory");
-// const AppError = require("./../utils/appError");
+const AppError = require("./../utils/appError");
 
 //////////////////// CRUD Handler ////////////////////////
 
@@ -99,3 +99,44 @@ exports.aliasTopTours = (req, res, next) => {
   req.query.fields = "name,price,ratingsAverage,summary,difficulty";
   next();
 };
+
+exports.getToursWithin = catchAsync(async (req, res, next) => {
+  const { distance, latlng, unit } = req.params;
+  const [lat, lng] = latlng.split(",");
+
+  // const radius = unit === "mi" ? distance / 3963.2 : distance / 6378.1; // TODO: If i get more then mi or km i might need to add more if checks
+
+  let radius;
+
+  if (unit === "mi") {
+    radius = distance / 3963.2;
+  } else if (unit === "km") {
+    radius = distance / 6378.1;
+  } else {
+    next(new AppError("Please specify radius in mi or km"));
+  }
+
+  if (!lat || !lng) {
+    next(new AppError("Please provide latitude and longitude in the format lat,lng.", 400));
+  }
+
+  // console.log(distance, lat, lng, unit);
+
+  const tours = await Tour.find({
+    startLocation: {
+      $geoWithin: {
+        $centerSphere: [[lng, lat], radius]
+      }
+    }
+  });
+
+  res.status(200).json({
+    status: "success",
+    results: tours.length,
+    data: {
+      data: tours
+    }
+  });
+});
+
+// "/tours-within/:distance/center/:latlng/unit/:unit"

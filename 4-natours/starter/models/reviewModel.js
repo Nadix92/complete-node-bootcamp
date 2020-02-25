@@ -34,6 +34,9 @@ const reviewSchema = new mongoose.Schema(
   }
 );
 
+reviewSchema.index({ tour: 1, user: 1 }, { unique: true });
+
+// show users.name and .photo on every query that starts with "find"
 reviewSchema.pre(/^find/, function(next) {
   // path = name in schema, select = witch fields we wanna select in our schema
   // this.populate({
@@ -52,6 +55,8 @@ reviewSchema.pre(/^find/, function(next) {
   next();
 });
 
+// ##### Calc avg Start ##### //
+
 reviewSchema.statics.calcAvgRatings = async function(tourId) {
   const stats = await this.aggregate([
     {
@@ -65,18 +70,40 @@ reviewSchema.statics.calcAvgRatings = async function(tourId) {
       }
     }
   ]);
-  console.log(stats);
+  // console.log(stats);
 
-  await Tour.findByIdAndUpdate(tourId, {
-    ratingsQuantity: stats[0].nRating,
-    ratingsAverage: stats[0].avgRating
-  });
+  if (stats.length > 0) {
+    await Tour.findByIdAndUpdate(tourId, {
+      ratingsQuantity: stats[0].nRating,
+      ratingsAverage: stats[0].avgRating
+    });
+  } else {
+    await Tour.findByIdAndUpdate(tourId, {
+      ratingsQuantity: 0,
+      ratingsAverage: 4.5
+    });
+  }
 };
 
 reviewSchema.post("save", function() {
   // this points to current review
   this.constructor.calcAvgRatings(this.tour);
 });
+
+reviewSchema.pre(/^findOneAnd/, async function(next) {
+  // Using "this" to pass "r" from pre to post middleware
+  this.r = await this.findOne();
+  // console.log(this.r);
+
+  next();
+});
+
+reviewSchema.post(/^findOneAnd/, async function() {
+  // can't query this.findOne() in a post functions, query has already executed
+  await this.r.constructor.calcAvgRatings(this.r.tour);
+});
+
+// ##### Calc avg End ##### //
 
 const Review = mongoose.model("Review", reviewSchema);
 
