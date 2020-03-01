@@ -7,6 +7,7 @@ const helmet = require('helmet');
 const mongoSanitize = require('express-mongo-sanitize');
 const xss = require('xss-clean');
 const hpp = require('hpp');
+const cookieParser = require('cookie-parser');
 
 // Local modules
 const AppError = require('./utils/appError');
@@ -43,6 +44,7 @@ app.use('/api', limiter);
 
 // body parser, to be able to read json from a request e.g  req.body
 app.use(express.json({ limit: '10kb' })); // set max limit 10kb
+app.use(cookieParser());
 
 // Data sanitization against NoSQL query injection
 app.use(mongoSanitize());
@@ -56,6 +58,11 @@ app.use(
     whitelist: ['duration', 'ratingsAverage', 'ratingsQuantity', 'maxGroupSize', 'difficulty', 'price']
   })
 );
+
+app.use((req, res, next) => {
+  console.log(req.cookies);
+  next();
+});
 
 // Routes
 app.use('/', viewRouter);
