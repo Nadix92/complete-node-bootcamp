@@ -44,6 +44,7 @@ app.use('/api', limiter);
 
 // body parser, to be able to read json from a request e.g  req.body
 app.use(express.json({ limit: '10kb' })); // set max limit 10kb
+app.use(express.urlencoded({ extended: true, limit: '10kb' })); // So we can parse data coming from a url parsed form
 app.use(cookieParser());
 
 // Data sanitization against NoSQL query injection
