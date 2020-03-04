@@ -13,6 +13,7 @@
         "mimetype",
         "minlength",
         "promisify",
+        "sendgrid",
         "slugify",
         "virtuals",
         "xlink"
