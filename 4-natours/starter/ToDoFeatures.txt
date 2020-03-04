@@ -1,5 +1,5 @@
 1) add signUp route, controller and pug file 
 
-2) 
+2) add review function on the site for users
 
 3)

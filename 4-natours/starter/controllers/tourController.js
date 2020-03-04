@@ -31,7 +31,7 @@ exports.resizeTourImages = catchAsync(async (req, res, next) => {
 
   // 1) Cover image
   req.body.imageCover = `tour-${req.params.id}-${Date.now()}-cover.jpeg`;
-  await sharp(req.file.imageCover[0].buffer)
+  await sharp(req.files.imageCover[0].buffer)
     .resize(2000, 1333) // take uploaded image from memory and resize it 500px * 500px and center it
     .toFormat('jpeg') // reformat it to always jpeg
     .jpeg({ quality: 90 }) // Set the image quality
