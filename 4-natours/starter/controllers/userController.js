@@ -35,6 +35,8 @@ const upload = multer({
 
 exports.uploadUserPhoto = upload.single('photo');
 
+// ********** MULTER END ********* //
+
 exports.resizeUserPhoto = (req, res, next) => {
   if (!req.file) return next();
 
@@ -48,8 +50,6 @@ exports.resizeUserPhoto = (req, res, next) => {
 
   next();
 };
-
-// ********** MULTER END ********* //
 
 const filterObj = (obj, ...allowedFields) => {
   const newObj = {};
