@@ -37,19 +37,19 @@ exports.uploadUserPhoto = upload.single('photo');
 
 // ********** MULTER END ********* //
 
-exports.resizeUserPhoto = (req, res, next) => {
+exports.resizeUserPhoto = catchAsync(async (req, res, next) => {
   if (!req.file) return next();
 
   req.file.filename = `user-${req.user.id}-${Date.now()}.jpeg`;
 
-  sharp(req.file.buffer)
+  await sharp(req.file.buffer)
     .resize(500, 500) // take uploaded image from memory and resize it 500px * 500px and center it
     .toFormat('jpeg') // reformat it to always jpeg
     .jpeg({ quality: 90 }) // Set the image quality
     .toFile(`public/img/users/${req.file.filename}`);
 
   next();
-};
+});
 
 const filterObj = (obj, ...allowedFields) => {
   const newObj = {};

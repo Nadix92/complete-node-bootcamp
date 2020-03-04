@@ -26,10 +26,36 @@ exports.uploadTourImages = upload.fields([
   { name: 'images', maxCount: 3 }
 ]);
 
-exports.resizeTourImages = (req, res, next) => {
-  console.log(req.files);
+exports.resizeTourImages = catchAsync(async (req, res, next) => {
+  if (!req.files.imageCover || !req.files.images) return next();
+
+  // 1) Cover image
+  req.body.imageCover = `tour-${req.params.id}-${Date.now()}-cover.jpeg`;
+  await sharp(req.file.imageCover[0].buffer)
+    .resize(2000, 1333) // take uploaded image from memory and resize it 500px * 500px and center it
+    .toFormat('jpeg') // reformat it to always jpeg
+    .jpeg({ quality: 90 }) // Set the image quality
+    .toFile(`public/img/tours/${req.body.imageCover}`);
+
+  // 2) Images
+  req.body.images = [];
+
+  await Promise.all(
+    req.files.images.map(async (file, i) => {
+      const filename = `tour-${req.params.id}-${Date.now()}-${i + 1}.jpeg`;
+
+      await sharp(file.buffer)
+        .resize(2000, 1333) // take uploaded image from memory and resize it 500px * 500px and center it
+        .toFormat('jpeg') // reformat it to always jpeg
+        .jpeg({ quality: 90 }) // Set the image quality
+        .toFile(`public/img/tours/${filename}`);
+
+      req.body.images.push(filename);
+    })
+  );
+
   next();
-};
+});
 
 //////////////////// CRUD Handler ////////////////////////
 
