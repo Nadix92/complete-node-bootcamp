@@ -18,7 +18,12 @@ router.use(authController.protect);
 
 router.patch('/updateMyPassword', authController.updatePassword);
 router.get('/me', userController.getMe, userController.getUser);
-router.patch('/updateMe', userController.uploadUserPhoto, userController.updateMe); // single('<req.file>') form the body named photo
+router.patch(
+  '/updateMe',
+  userController.uploadUserPhoto,
+  userController.resizeUserPhoto,
+  userController.updateMe
+); // single('<req.file>') form the body named photo
 router.delete('/deleteMe', userController.deleteMe);
 
 // RESTFUL / CRUD API

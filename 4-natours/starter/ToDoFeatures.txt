@@ -1,1 +1,5 @@
-1) add signUp route and controller and pug file 
+1) add signUp route, controller and pug file 
+
+2) 
+
+3)
