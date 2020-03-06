@@ -2,4 +2,4 @@
 
 2) add review function on the site for users
 
-3)
+3) Reset password route
