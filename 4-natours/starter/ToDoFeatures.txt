@@ -3,5 +3,26 @@
 2) add review function on the site for users
 
 3) Reset password route
+  a) a-tag in login form "forgot your password?"
+  b) send you to new page that we setup forgotten password (api already working just need to connect it)
 
 4) Make admin settings work
+
+5)
+
+#### CHALLENGES ####
+
+API:
+  1) User can only write review on tour they booked
+  2) Nested Booking routes users who are booked on next tour
+  3) participants for each tour
+  4) advanced auth feature: confirm email token, refresh tokens, two-factor auth
+
+WEBSITE:
+  1) Sing up form
+  2) On tour detail page, if user has taken a tour he can write a review, check for how much time passed since if (createdAt is before StartDate) then he can write review on tour
+  3) Hide tour that user have already booked (also add this on backend)
+  4) implement "like or favorite" page
+  5) My Reviews page where user can update and delete reviews
+  6) Remake whole page in react as single page application
+  7) Admin management for pages using CRUD operations
