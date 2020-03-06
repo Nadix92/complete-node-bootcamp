@@ -3,3 +3,5 @@
 2) add review function on the site for users
 
 3) Reset password route
+
+4) Make admin settings work
